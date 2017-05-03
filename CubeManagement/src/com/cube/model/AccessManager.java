@@ -36,7 +36,7 @@ public class AccessManager {
 		
 		Access access = new Access();
 		int count = access.getUserCount(con, userid);
-		if(count ==2)
+		if(count ==1)
 		{
 			PushNotification push = new PushNotification(userid);
 			Thread th = new Thread(push);
@@ -44,18 +44,18 @@ public class AccessManager {
 			AbandonedConnectionCleanupThread.shutdown();
 		}
 	}
-	public void alertUser() throws ClassNotFoundException, SQLException
+	public void alertUser() throws ClassNotFoundException, SQLException, ParseException, InterruptedException
 	{
 
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "root");
 		
 		Access access = new Access();
-		int count = access.getUserCount(con, userid);
-		if(count ==2)
+		double exceed = access.totalBill(con, userid);
+		if(exceed >= 20000)
 		{
-			PushNotification push = new PushNotification(userid);
-			Thread th = new Thread(push);
+			AlertUser alert = new AlertUser((long)exceed);
+			Thread th = new Thread(alert);
 			th.start();
 			AbandonedConnectionCleanupThread.shutdown();
 		}

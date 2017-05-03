@@ -90,7 +90,7 @@ public class Access {
 				
 				JSONObject row = (JSONObject)parser.parse(str);
 				String verb = (String)row.get("verb");
-				if(count ==1)
+				if(count >1)
 					break;
 				if(verb.equalsIgnoreCase("pay"))
 				count++;
@@ -102,10 +102,10 @@ public class Access {
 		con.close();
 		return count;
 	}
-	public boolean totalBill(Connection con,int userid) throws SQLException, ParseException
+	public double totalBill(Connection con,int userid) throws SQLException, ParseException
 	{
 		JSONParser parser = new JSONParser();
-		ResultSet rs = con.prepareStatement("select * from userdb_cube.user where userid = "+userid + "and ts is not null;").executeQuery();
+		ResultSet rs = con.prepareStatement("select * from userdb_cube.user where userid = "+userid + "and ts is not null order by ts limit 5;").executeQuery();
 		double sum=0;
 		int st_ts=-1;
 		try{
@@ -143,10 +143,7 @@ public class Access {
 		}
 		
 		con.close();
-		if(sum >= 20000)
-			return true;
-		else
-			return false;
+		return sum;
 	}
 	private void printValue(String value)
 	{

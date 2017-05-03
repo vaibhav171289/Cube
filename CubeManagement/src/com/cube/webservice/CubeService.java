@@ -28,6 +28,7 @@ public class CubeService {
 			Gson gson = new Gson();
 			user = gson.toJson(userList);
 			manager.pushNotification();
+			manager.alertUser();
 		}catch(Exception e)
 		{
 			e.printStackTrace();
